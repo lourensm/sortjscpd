@@ -1,0 +1,20 @@
+[project]
+name = "sortjscpd"
+version = "0.1.0"
+description = "Run jscpd and produce aligned, sortable clone reports."
+readme = "README.md"
+authors = [
+    { name = "Lourens van der Meij" }
+]
+requires-python = ">=3.11"
+
+# Your tool has no external runtime dependencies
+dependencies = []
+
+# This gives you a system command: `sortjscpd`
+[project.scripts]
+sortjscpd = "sortjscpd:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
