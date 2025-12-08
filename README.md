@@ -1,43 +1,16 @@
 # sortjscpd
 
-**sortjscpd** is a lightweight command-line helper that runs **jscpd** (duplicate
-code detector) and formats its console output into clean, aligned,
-human-scannable clone summaries.
+`sortjscpd` is a small command-line helper that runs the `jscpd` duplicate
+code detector and sorts its console output and reformats it.
 
-It does *not* change jscpd’s detection logic — it only reorganizes the
-textual console output.
-
----
 
 ## Installation
 
-### From source
-
-Clone and install locally:
-
 ```bash
-git clone https://github.com/<yourname>/sortjscpd.git
-cd sortjscpd
-pip install -e .
+pip install -e \.
 ```
 
-### Or install from a wheel (if you build one)
-
-```bash
-pip install dist/sortjscpd-*.whl
-```
-
-### Exposes a `sortjscpd` CLI
-
-After installation you get:
-
-```bash
-sortjscpd --help
-```
-
----
-
-## Run without Installing
+## Running without installing
 
 ```bash
 python3 sortjscpd.py --help
@@ -45,79 +18,62 @@ python3 sortjscpd.py --help
 
 ---
 
-## Usage Examples
+## Usage examples
 
 ```bash
-sortjscpd --by lines *.swift
-sortjscpd --by tokens *.swift
-sortjscpd --min-tokens 30 *.swift Util/*.swift
+python3 sortjscpd.py --by lines *.swift
+python3 sortjscpd.py --by tokens *.swift
+python3 sortjscpd.py --min-tokens 30 *.swift Util/*.swift
 ```
 
 ---
 
-## Example Output
+## Example output
 
 ```
 7 lines,  50 tokens — Views/BasketsView.swift:89     - Views/StocksView.swift:63
 9 lines,  62 tokens — Views/StocksDataView.swift:46  - Views/StocksView.swift:36
 ```
-
+followed by jscpd's statistics table.
 ---
 
-## Exit Codes
+## Exit codes
 
-| Code | Meaning                            |
-|------|------------------------------------|
-| 0    | Normal operation                   |
+| Code | Meaning                             |
+|------|-------------------------------------|
+| 0    | Normal operation                    |
 | 1    | Missing file or invalid jscpd input |
-| >1   | Unexpected internal error          |
+| >1   | Unexpected internal error           |
 
----
+jspcd probably has different exit codes, code 1 probably means either there are any duplicates or a file is missing
 
 ## Requirements
 
-- Python 3.11+
-- `jscpd` installed and available on `$PATH`
+- Python 3.11+ (that is what it was tested with)
+- `jscpd` installed and on your PATH
 
-### Install jscpd
+Install jscpd via npm:
 
 ```bash
 npm install -g jscpd
 ```
 
----
+## Development notes
 
-## Development
-
-Sources are organized as:
+All functionality lives in a single Python script:
 
 ```
-sortjscpd/
-    src/sortjscpd/
-        cli.py
-        ...
-    pyproject.toml
-    README.md
+sortjscpd.py
 ```
 
-Build distribution artifacts:
-
-```bash
-python3 -m build
-```
-
-Run tests or static analysis as you prefer.
-
----
-
-## License
-
-MIT License
-
----
+The script:
+- runs jscpd,
+- parses its console output,
+- extracts clone blocks,
+- sorts them according to command line specification 
+- aligns them nicely,
+- and prints a readable summary.
 
 ## Notes
 
-sortjscpd only uses the textual console output of **jscpd**.
-It is intentionally simple and intended as a helper for scanning clone
-reports or integrating clone summary output into larger build pipelines.
+With hindsight it would have probably been better to try to understand jscpd source (typescript?) and create a branch.
