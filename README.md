@@ -13,6 +13,8 @@ pip install -e .
 ```
 This installs `sortjscpd` as a stand-alone program.
 
+---
+
 ## Running without installing
 
 ```bash
@@ -31,9 +33,10 @@ sortjscpd.py --min-tokens 30 *.swift Util/*.swift
 ```
 
 Options:
-* --by {lines|tokens} — choose the sort key
-* --fmt {short|long} — choose output format
-* --min-tokens N — passed through to jscpd
+
+- `--by {lines|tokens}` — choose the sort key (default: `lines`)
+- `--fmt {short|long}` — choose output format (default: `short`)
+- `--min-tokens N` — minimum token threshold passed to `jscpd` (default: `20`)
 
 ---
 
