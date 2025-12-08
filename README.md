@@ -62,7 +62,8 @@ ___
 | 1    | Missing file or invalid jscpd input |
 | >1   | Unexpected internal error           |
 
-jspcd probably has different exit codes, code 1 probably means either there are any duplicates or a file is missing
+jspcd probably has different exit codes, code 1 probably means either there are some 
+duplicates or that an input file is missing
 ___
 ## Requirements
 
