@@ -73,12 +73,15 @@ The script:
 
 
 ___
+
 ## Remarks
 
 With hindsight, it might have been cleaner to study the `jscpd` source (TypeScript)
 and implement this as an internal formatter or extension. For now, this tool
 operates purely on the textual output of `jscpd`.
+
 ---
+
 ## Requirements
 
 - Python 3.10+ (that is what it was tested with)
