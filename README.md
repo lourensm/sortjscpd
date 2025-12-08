@@ -1,5 +1,7 @@
 # sortjscpd
 
+TEST
+
 **sortjscpd** is a lightweight command-line helper that runs **jscpd** (duplicate
 code detector) and formats its console output into clean, aligned,
 human-scannable clone summaries.
