@@ -7,7 +7,7 @@ code detector and sorts its console output and reformats it.
 ## Installation
 
 ```bash
-pip install -e \.
+pip install -e .
 ```
 
 ## Running without installing
