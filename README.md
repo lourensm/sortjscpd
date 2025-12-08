@@ -2,7 +2,7 @@
 
 `sortjscpd` is a small command-line helper around the `jscpd` duplicate-code detector.  
 It runs `jscpd`, parses its text output, sorts the clone blocks according to command-line
-options, formats them into either compact or detailed form, and then prints the original
+options, formats them into either compact or detailed form, and then copies the original
 `jscpd` summary table.
 
 ---
@@ -29,7 +29,7 @@ python3 sortjscpd.py --help
 sortjscpd *.swift
 sortjscpd --by lines *.swift
 sortjscpd --by tokens *.swift
-sortjscpd.py --min-tokens 30 *.swift Util/*.swift
+sortjscpd --min-tokens 30 *.swift Util/*.swift
 ```
 
 Options:
@@ -68,12 +68,13 @@ Views/WindowSettingsView.swift [17:20 - 24:2]
 ...
 ```
 
-After the duplicate listing, the statistics table printed by jscpd follows unchanged.
+After the duplicate listing, the statistics table printed by `jscpd` follows unchanged.
 
 ---
+
 ## Requirements
 
-- Python 3.10+ (that is what it was tested with)
+- Python 3.10+ (tested with Python 3.11)
 - `jscpd` installed and on your PATH
 
 Install jscpd via npm:
@@ -95,10 +96,9 @@ It:
 - runs `jscpd` as a subprocess,
 - captures and parses its console output,
 - extracts clone blocks,
-- sorts them based on the chosen criterion, 
+- sorts them based on the chosen criterion,
 - formats them (short or long),
 - and finally copies the `jscpd` provided summary.
-
 
 ___
 
@@ -108,28 +108,7 @@ With hindsight, it might have been cleaner to study the `jscpd` source (TypeScri
 and implement this as an internal formatter or extension. For now, this tool
 operates purely on the textual output of `jscpd`.
 
----
-
-
----
-
-## How it works
-
-All functionality lives in a single Python script:
-
-```
-sortjscpd.py
-```
-
-The script:
-- runs `jscpd` as a subprocess,
-- parses its console output,
-- extracts clone blocks,
-- sorts them according to command-line options, 
-- aligns the output,
-- and copies the `jscpd` provided summary.
-
-___
+--- 
 ## Exit codes
 
 | Code | Meaning                             |
