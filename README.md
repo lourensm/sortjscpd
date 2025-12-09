@@ -8,7 +8,7 @@ options, formats them into either compact or detailed form, and then copies the 
 ---
 ## Installation
 
-```bash
+```shell
 pip install -e .
 ```
 This installs `sortjscpd` as a stand-alone program.
@@ -17,7 +17,7 @@ This installs `sortjscpd` as a stand-alone program.
 
 ## Running without installing
 
-```bash
+```shell
 python3 sortjscpd.py --help
 ```
 
@@ -25,7 +25,7 @@ python3 sortjscpd.py --help
 
 ## Usage
 
-```bash
+```shell
 sortjscpd *.swift
 sortjscpd --by lines *.swift
 sortjscpd --by tokens *.swift
@@ -79,7 +79,7 @@ After the duplicate listing, the statistics table printed by `jscpd` follows unc
 
 Install jscpd via npm:
 
-```bash
+```shell
 npm install -g jscpd
 ```
 
@@ -107,6 +107,12 @@ ___
 With hindsight, it might have been cleaner to study the `jscpd` source (TypeScript)
 and implement this as an internal formatter or extension. For now, this tool
 operates purely on the textual output of `jscpd`.
+
+Currently, `sortjscpd` only exposes the --min-tokens N option to the user.
+It also adds --reporters console,html internally.
+
+In the future, we may extend sortjscpd to pass through additional jscpd command-line arguments, 
+or support a more general forwarding mechanism.
 
 --- 
 ## Exit codes
