@@ -9,6 +9,8 @@ import subprocess
 from dataclasses import dataclass
 from collections.abc import Iterator
 from enum import Enum
+from typing import cast, Any
+
 
 # ----------------------------------------
 # Argument parser
@@ -16,7 +18,7 @@ from enum import Enum
 class Parser:
     DESCRIPTION = "Run jscpd and sort its clone output."
 
-    ARGUMENTS = [
+    ARGUMENTS: list[tuple[str, dict[str, object]]] = [
         ("--by", {
             "choices": ["lines", "tokens"],
             "default": "lines",
@@ -42,7 +44,7 @@ class Parser:
     def build() -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(description=Parser.DESCRIPTION)
         for name, kwargs in Parser.ARGUMENTS:
-            parser.add_argument(name, **kwargs)
+            parser.add_argument(name, **cast(dict[str, Any], kwargs))
         return parser
 
     @staticmethod
@@ -81,6 +83,7 @@ class JSCPDRunner:
         if first.startswith("Error:"):
             raise RuntimeError(f"jscpd error: {first}")
         return text
+
 
 class LineCol:
     def __init__(self, line: int, col: int):
@@ -129,6 +132,8 @@ class CloneFileInfoFormat:
         return f"{self.snippet_spec.render(info):<{self.snippet_width}}"
 
     def adjust_width(self, clone_infos: list["CloneInfo"]) -> None:
+        if not clone_infos:
+            return
         self.snippet_width = 0
         left_snippet_width = max(len(self.snippet_spec.render(info.info1)) for info in clone_infos)
         right_snippet_width = max(len(self.snippet_spec.render(info.info2)) for info in clone_infos)
@@ -159,7 +164,7 @@ class CloneInfoFormat:
 
     # noinspection PyMethodMayBeStatic
     def render_info(self, info: "CloneInfo") -> str:
-        return f"{info.lines:3} lines, {info.tokens:3} tokens"
+        return f"{info.lines:{3 if self.single_line else ''}} lines, {info.tokens:3} tokens"
 
     def render(self, info: "CloneInfo") -> str:
         fmt = self.file_format
@@ -168,7 +173,7 @@ class CloneInfoFormat:
         else:
             return (
                 f"{fmt.render(info.info1)} "
-                f"({self.render_info(info)}\n"
+                f"({self.render_info(info)})\n"
                 f"{fmt.render(info.info2)}"
                 "\n"
             )
@@ -215,6 +220,8 @@ class CloneInfo:
     def __init__(self, line1: str, line2: str):
         m1 = self.RE_FIRST.match(line1)
         m2 = self.RE_SECOND.match(line2)
+        if m1 is None or m2 is None:
+            raise ValueError("Invalid clone block format")
         self.info1 = CloneFileInfo(m1)
         self.info2 = CloneFileInfo(m2)
         self.lines = int(m1.group("lines"))
@@ -226,7 +233,7 @@ class CloneInfo:
 
 class CloneExtractor:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.summary: list[str] = []
 
     ANSI = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
@@ -307,14 +314,18 @@ def main():
         CloneSorter.sort_infos(clone_infos, args.by)
         fmt = CloneInfoFormat.from_args(args)
         fmt.adjust_width(clone_infos)
-        for info in clone_infos:
-            print(fmt.render(info))
+        if clone_infos:
+            for info in clone_infos:
+                print(fmt.render(info))
+        # else:
+        #     print("No duplicates found.")
+        #            The jscpd statistics already notes "Found 0 clones.
         for line in summary:
             print(line, end="")
     except FileNotFoundError as e:
         print(f"error: {e}", file=sys.stderr)
         sys.exit(1)
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         # fallback for unexpected errors
         print(f"FATAL ERROR: {e}", file=sys.stderr)
         sys.exit(1)
