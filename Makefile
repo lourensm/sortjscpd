@@ -7,7 +7,7 @@ default:
 help:
 	@ echo "    p:           pylint"
 	@ echo "    v:           vulture"
-    @ echo "    vulture:     vulture with whitelist and statistics
+	@ echo "    vulture:     vulture with whitelist and statistics"
 	@ echo "    mypy:        mypy"
 	@ echo "    pycodestyle: pycodestyle"
 
@@ -44,3 +44,10 @@ vulturesetup:
 # pip install mypy
 mypy:
 	export MYPYPATH=out;mypy $(SOURCES)
+
+.installed: $(SOURCES) pyproject.toml
+	pip install -e .
+	touch .installed
+
+test:	.installed
+	sortjscpd --min-tokens 10 sortjscpd.py
