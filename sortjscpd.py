@@ -48,16 +48,18 @@ class Parser:
         return parser
 
     @staticmethod
-    def parse() -> argparse.Namespace:
-        return Parser.build().parse_args()
+    def parse_known_args() -> tuple[argparse.Namespace, list[str]]:
+        return Parser.build().parse_known_args()
 
 
 class JSCPDRunner:
     @staticmethod
-    def run(min_tokens: int, files: list[str]) -> str:
+    def run(passthrough: list[str], min_tokens: int, files: list[str]) -> str:
+        if passthrough:
+            raise RuntimeError(f"Passthrough options not supported: {passthrough}")
         cmd = [
             "jscpd",
-            "--reporters", "console,html",
+            "--reporters", "console",
             "--min-tokens", str(min_tokens),
         ] + files
 
@@ -308,8 +310,8 @@ class CloneSorter:
 
 def main():
     try:
-        args = Parser.parse()
-        raw_text = JSCPDRunner.run(args.min_tokens, args.files)
+        args, passthrough = Parser.parse_known_args()
+        raw_text = JSCPDRunner.run(passthrough, args.min_tokens, args.files)
         clone_infos, summary = CloneExtractor.extract_infos(raw_text)
         CloneSorter.sort_infos(clone_infos, args.by)
         fmt = CloneInfoFormat.from_args(args)
