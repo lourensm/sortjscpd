@@ -1,9 +1,10 @@
 # sortjscpd
 
 `sortjscpd` is a small command-line helper around the `jscpd` duplicate-code detector.  
-It runs `jscpd`, parses its text output, sorts the clone blocks according to command-line
+It runs `jscpd`, parses its console output, sorts the clone blocks according to command-line
 options, formats them into either compact or detailed form, and then copies the original
 `jscpd` summary table.
+
 
 ---
 ## Installation
@@ -93,7 +94,7 @@ sortjscpd.py
 
 It:
 
-- runs `jscpd` as a subprocess,
+- runs `jscpd` as a subprocess, with option `--reporters console` and the trailing arguments as files
 - captures and parses its console output,
 - extracts clone blocks,
 - sorts them based on the chosen criterion,
@@ -102,17 +103,22 @@ It:
 
 ___
 
-## Remarks
+### Limitations and future improvements
 
-With hindsight, it might have been cleaner to study the `jscpd` source (TypeScript)
-and implement this as an internal formatter or extension. For now, this tool
-operates purely on the textual output of `jscpd`.
+This tool parses the console output of `jscpd`.
 
-Currently, `sortjscpd` only exposes the --min-tokens N option to the user.
-It also adds --reporters console,html internally.
+`sortjscpd` expects a list of files to be passed on to `jscpd`. `jscpd` allows other kinds of input,
+e.g. directories, no `files`..
 
-In the future, we may extend sortjscpd to pass through additional jscpd command-line arguments, 
-or support a more general forwarding mechanism.
+In retrospect, a more robust design would have been to:
+
+- integrate sorting directly into `jscpd`’s source (TypeScript), or  
+- use the `--reporters json` output and process the structured data instead of console text.
+
+At the time of writing, the console output was the quickest approach for a
+drop-in helper tool. Future versions may switch to consuming `jscpd`’s JSON
+reporter or supporting additional reporter formats.
+
 
 --- 
 ## Exit codes
@@ -122,3 +128,16 @@ or support a more general forwarding mechanism.
 | 0    | Normal operation                    |
 | 1    | Missing file or invalid jscpd input |
 | >1   | Unexpected internal error           |
+
+## TODO
+
+Have a look at jscpd documentation!
+
+Explore other jscpd functionality, specifically the --reporters json
+
+`sortjscpd` doesn't follow `jscpd` conventions enough:
+
+* `jscpd` without arguments seems to recursively analyse the current directory.
+* `jscpd` without `--reporters` options does report, probably to `console` 
+* An unsupported --reporters option probably looks for an installed package named `@jscpd/aap-reporter` or 
+  `jscpd-aap-reporter` but then still outputs clones, but probably not the table.
