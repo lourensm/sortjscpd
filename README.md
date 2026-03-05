@@ -5,6 +5,17 @@ It runs `jscpd`, parses its console output, sorts the clone blocks according to 
 options, formats them into either compact or detailed form, and then copies the original
 `jscpd` summary table.
 
+# recent developments
+
+There were a number of issues with jscpd which made me unhappy with it. 
+I currently use `cpd`:
+
+```shell
+pmd cpd --ignore-identifiers --minimum-tokens 25 --language swift --format xml $(ALLSWIFTNOPARSER) \
+	| xsltproc cpd-sort-text.xslt -
+```
+The cpd output is sorted by means of an xslt script.
+This does imply that I am not actively tweaking this project.
 
 ---
 ## Installation
