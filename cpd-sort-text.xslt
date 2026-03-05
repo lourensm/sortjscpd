@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Used to sort PMD CPD XML output by clone size and location.
+
+Example usage:
+
+pmd cpd --ignore-identifiers --minimum-tokens 25 --language swift --format xml $(ALLSWIFTNOPARSER) \
+  | xsltproc cpd-sort-text.xslt -
+-->
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:cpd="https://pmd-code.org/schema/cpd-report"
