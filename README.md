@@ -5,17 +5,16 @@ It runs `jscpd`, parses its console output, sorts the clone blocks according to 
 options, formats them into either compact or detailed form, and then copies the original
 `jscpd` summary table.
 
-# recent developments
+## Status
 
-There were a number of issues with jscpd which made me unhappy with it. 
-I currently use `cpd`:
+I stopped actively using `jscpd` because it produced clone reports that were not reliable enough for my workflow (too many misses / noise for the kind of refactoring decisions I wanted to make).
 
-```shell
+These days I use **PMD CPD** instead, and post-process the XML output with a small XSLT script:
+
+```sh
 pmd cpd --ignore-identifiers --minimum-tokens 25 --language swift --format xml $(ALLSWIFTNOPARSER) \
-	| xsltproc cpd-sort-text.xslt -
+  | xsltproc cpd-sort-text.xslt -
 ```
-The cpd output is sorted by means of an xslt script.
-This does imply that I am not actively tweaking this project.
 
 ---
 ## Installation
