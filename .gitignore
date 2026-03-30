@@ -1,0 +1,15 @@
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.coverage
+
+# IDE
+.idea/
+
+# Generated / temp
+report/
+.installed
+whitelistnew.py
+
